@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(bvh VERSION 2.0)
+project(bvh VERSION 2.0.0 LANGUAGES C CXX)
 
 option(BVH_BUILD_C_API "Builds the C API library wrapper" OFF)
 option(BVH_C_API_STATIC_LINK_STDLIB "Link the C API library statically against the standard C++ library (only supported by clang/gcc)" OFF)

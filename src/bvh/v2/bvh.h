@@ -27,8 +27,17 @@ struct Bvh {
 
     Bvh& operator = (Bvh&&) = default;
 
+#if __cplusplus >= 202002L
     bool operator == (const Bvh& other) const = default;
     bool operator != (const Bvh& other) const = default;
+#else
+    bool operator == (const Bvh& other) const {
+        return nodes == other.nodes && prim_ids == other.prim_ids;
+    }
+    bool operator != (const Bvh& other) const {
+        return !this->operator==( other );
+    }
+#endif
 
     /// Returns whether the node located at the given index is the left child of its parent.
     static BVH_ALWAYS_INLINE bool is_left_sibling(size_t node_id) { return node_id % 2 == 1; }
@@ -145,8 +154,13 @@ restart:
                 top = near_index;
             } else if (hit_right)
                 top = right.index;
+#if __cplusplus >= 202002L
             else [[unlikely]]
                 goto restart;
+#else
+            else
+                goto restart;
+#endif
         }
 
         [[maybe_unused]] auto was_hit = leaf_fn(top.first_id(), top.first_id() + top.prim_count());
